@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4827AF">
+  <title>Szabadságfokok térben</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+  <style>
+    :root{--bg:#f6f5f8;--paper:#fff;--ink:#29282e;--muted:#716d7b;--line:#e5e1ed;--primary:#4827AF;--primary-soft:#eee9fa;--primary-border:#d4c9ee;--green:var(--primary);--green-soft:var(--primary-soft);--orange:#FF4208;--orange-soft:#fff0e9;--orange-ink:#b52c00;--blue:#586579;--radius:8px}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;letter-spacing:0}button,input,select{font:inherit}button{cursor:pointer}button,a,input,select{-webkit-tap-highlight-color:transparent}button{color:inherit}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #6ba999;outline-offset:3px}button svg{pointer-events:none}svg{width:18px;height:18px;stroke-width:1.7;flex-shrink:0}h1,h2,h3,p{margin:0}button{border:0;background:none}button,label,select{touch-action:manipulation}.brand,.display,h1,h2,h3,.stat-number{font-family:'Space Grotesk',sans-serif}a{color:var(--green)}
+    .topbar{height:78px;padding:0 34px;display:flex;align-items:center;justify-content:space-between;background:var(--paper);border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:23px;text-decoration:none;color:var(--ink)}.brand-mark{display:grid;place-items:center;background:var(--green);color:white;width:36px;height:36px;border-radius:8px}.brand-mark svg{width:23px;height:23px}.brand span:last-child{font-weight:400;color:var(--green)}.header-right{display:flex;align-items:center;gap:22px}.course-label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}.help-btn{display:flex;align-items:center;gap:8px;font-size:13px}.avatar{width:32px;height:32px;display:grid;place-items:center;background:var(--green-soft);border:1px solid #cfe2d7;border-radius:50%;font-weight:600;color:var(--green);font-size:12px}
+    main{max-width:1720px;margin:0 auto;padding:30px 34px 24px}.intro{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:26px}.eyebrow{text-transform:uppercase;color:var(--green);font-size:10px;font-weight:700;letter-spacing:1.6px;margin-bottom:8px;display:flex;align-items:center;gap:7px}.eyebrow::before{content:'';height:5px;width:5px;background:var(--green);border-radius:50%}h1{font-size:30px;line-height:1.25;font-weight:600}.intro p{color:var(--muted);margin-top:8px;font-size:13px}.lesson-tag{font-size:11px;padding:7px 10px;border:1px solid var(--line);border-radius:4px;color:var(--muted);white-space:nowrap}.mode-tabs{display:flex;border-bottom:1px solid var(--line);gap:28px;margin-bottom:23px}.mode-tab{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px;padding:0 1px 15px;position:relative;color:var(--muted)}.mode-tab.active{color:var(--green)}.mode-tab.active::after{content:'';position:absolute;height:3px;background:var(--green);bottom:-1px;left:0;right:0;border-radius:2px}.small-badge{font-size:10px;background:#e9eeeb;padding:2px 6px;border-radius:4px;color:var(--muted)}
+    .workspace{display:grid;grid-template-columns:220px minmax(0,1fr) 270px;gap:24px;align-items:start}.section-label{text-transform:uppercase;letter-spacing:1.2px;font-size:10px;font-weight:700;color:var(--muted);margin:4px 0 14px}.robot-list{display:flex;flex-direction:column;gap:5px}.robot-option{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:11px 10px;border:1px solid transparent;border-radius:6px;transition:background .16s,border-color .16s;min-height:57px}.robot-option:hover{background:#edf1ee}.robot-option.active{background:var(--green-soft);border-color:#c8e0d2}.robot-mini{width:31px;height:31px;display:grid;place-items:center;color:#87928e;flex-shrink:0}.robot-mini svg{width:25px;height:25px}.robot-option.active .robot-mini{color:var(--green)}.robot-option .name{display:block;font-size:12px;font-weight:600}.robot-option .type{display:block;font-size:10px;color:var(--muted);margin-top:3px}.robot-option .count{margin-left:auto;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--muted);white-space:nowrap}.robot-option.active .count{color:var(--green)}.sidebar-note{margin-top:22px;padding-top:17px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--muted);display:flex;gap:8px}.sidebar-note svg{width:15px;height:15px;margin-top:2px}.sidebar-note strong{color:#53645c;font-weight:500}
+    .viewer-column{min-width:0}.viewer{height:450px;position:relative;overflow:hidden;background:#edf1ee;border:1px solid #dfe6e1;border-radius:8px}.viewer canvas{width:100%;height:100%;display:block;touch-action:none;outline:none}.viewer-heading{position:absolute;top:20px;left:21px;z-index:1;pointer-events:none}.viewer-heading h2{font-size:19px;font-weight:600;line-height:1.25}.viewer-heading p{font-size:11px;color:var(--muted);margin-top:5px}.live-tag{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--green);margin-bottom:8px}.live-tag::before{content:'';width:5px;height:5px;background:#228c68;border-radius:50%}.viewer-actions{position:absolute;top:18px;right:16px;display:flex;gap:6px}.icon-btn{display:grid;place-items:center;width:32px;height:32px;background:#ffffffd9;border:1px solid #dbe3dd;border-radius:5px;color:#52665a}.icon-btn:hover{background:#fff;color:var(--green)}.icon-btn[aria-pressed=true]{background:var(--green);color:white;border-color:var(--green)}.viewer-footer{position:absolute;bottom:16px;left:18px;right:18px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}.legend{display:flex;gap:13px;align-items:center;font-size:10px;color:#65726b;background:#ffffffda;padding:7px 9px;border-radius:4px}.legend span{display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}.dot.r{background:var(--green)}.dot.p{background:var(--orange)}.axis-legend{display:flex;gap:8px;font-size:10px;font-weight:700}.axis-legend span:nth-child(1){color:#c76454}.axis-legend span:nth-child(2){color:#53947a}.axis-legend span:nth-child(3){color:#527cbd}.joint-label{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;min-width:23px;height:23px;padding:0 4px;background:white;border:1px solid #bfd5c5;color:var(--green);border-radius:50%;display:grid;place-items:center;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 2px 7px #1a35200b}.joint-label.p{border-color:#e9bb9f;color:#bd653e}.tooltip{position:absolute;z-index:5;background:#fff;border:1px solid var(--line);padding:13px 15px;border-radius:6px;box-shadow:0 8px 30px #172e231a;min-width:185px;pointer-events:none;font-size:11px;line-height:1.7}.tooltip strong{font-size:12px}.tooltip .tt-row{display:flex;justify-content:space-between;gap:20px;color:var(--muted)}.tooltip .tt-row b{font-weight:500;color:var(--ink)}.status-overlay{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:12px;background:var(--bg);padding:30px;z-index:4;font-size:13px;line-height:1.6}.status-overlay[hidden]{display:none}.status-overlay button{justify-self:center;background:var(--green);padding:9px 15px;color:white;border-radius:5px}.error-detail{color:var(--muted);font-size:11px;max-width:360px}
+    .motion-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 0 19px}.motion-left,.motion-right{display:flex;align-items:center;gap:8px}.play-btn{display:flex;align-items:center;gap:7px;background:var(--ink);color:white;padding:9px 12px;border-radius:5px;font-size:11px;white-space:nowrap}.play-btn svg{width:14px;height:14px}.reset-btn{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);padding:7px}.reset-btn svg{width:14px;height:14px}.check-label{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted)}input[type=checkbox]{accent-color:var(--green);width:13px;height:13px;margin:0}.joint-section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.joint-section-title h3{font-size:13px;font-weight:600}.joint-section-title span{font-size:10px;color:var(--muted)}.joint-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.joint-control{background:white;border:1px solid var(--line);border-radius:6px;padding:11px 12px}.joint-control.highlight{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}.joint-control-head{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:10px}.joint-control-head strong{font-weight:600}.joint-code{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--green);background:var(--green-soft);width:23px;height:23px;display:grid;place-items:center;border-radius:4px;flex-shrink:0}.joint-code.p{color:#bd653e;background:var(--orange-soft)}.joint-value{margin-left:auto;white-space:nowrap;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}input[type=range]{width:100%;height:4px;accent-color:var(--green);cursor:pointer;display:block;margin:7px 0 6px}.joint-control.p input[type=range]{accent-color:var(--orange)}.range-ends{display:flex;justify-content:space-between;font-size:9px;color:#98a29d;margin-top:7px}.builder-joint-config{display:flex;align-items:center;gap:7px;margin-bottom:10px}.segmented{display:flex;background:#f0f3f1;padding:2px;border-radius:4px;flex:1}.segmented button{font-size:10px;padding:5px 6px;flex:1;border-radius:3px;white-space:nowrap}.segmented button.active{background:white;box-shadow:0 1px 3px #0000000d;color:var(--green);font-weight:600}.segmented button.active.p{color:#b96942}.axis-select{width:45px;font-size:10px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:4px;color:var(--muted)}
+    .inspector{background:white;border:1px solid var(--line);border-radius:8px;overflow:hidden}.inspector-top{padding:21px 20px 18px;border-bottom:1px solid var(--line)}.inspector-kicker{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--muted)}.inspector-kicker svg{width:15px;height:15px}.stat-number{display:flex;align-items:baseline;gap:9px;margin:10px 0 5px;font-size:52px;font-weight:500;line-height:1.1;color:var(--green)}.stat-number span{font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--ink)}.stat-caption{font-size:11px;line-height:1.6;color:var(--muted)}.joint-breakdown{display:flex;gap:22px;margin-top:19px}.breakdown-item{font-size:10px;color:var(--muted)}.breakdown-item strong{display:block;font-size:17px;font-family:'Space Grotesk',sans-serif;color:var(--ink);font-weight:500;margin-bottom:4px}.breakdown-item strong .dot{margin-right:7px;vertical-align:middle}.inspector-section{padding:18px 20px;border-bottom:1px solid var(--line)}.inspector-section:last-child{border-bottom:0}.inspector-section h3{font-size:12px;font-weight:600;margin-bottom:12px}.chain{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.chain-chip{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;background:var(--green-soft);color:var(--green);border:1px solid #d5e8dc;padding:5px 8px;border-radius:4px}.chain-chip.p{background:var(--orange-soft);color:#bd653e;border-color:#f2d9c7}.chain-arrow{font-size:10px;color:#adb5af}.body-copy{color:var(--muted);font-size:11px;line-height:1.8}.usage-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}.usage-tags span{font-size:9px;background:var(--bg);border:1px solid var(--line);padding:4px 6px;border-radius:3px;color:#64726a}.tip{background:#f3f7f3;padding:13px;border-left:2px solid #8cb89c;border-radius:0 4px 4px 0}.tip-title{display:flex;gap:6px;align-items:center;font-size:11px;font-weight:600;margin-bottom:6px}.tip-title svg{width:14px;height:14px;color:var(--green)}.tip p{font-size:10px;color:#708078;line-height:1.8}.motion-summary{display:flex;flex-wrap:wrap;gap:5px}.motion-summary span{font-size:10px;padding:4px 7px;background:#f2f5f3;border-radius:3px;color:#64756a}.info-band{display:grid;grid-template-columns:1fr 1fr 1fr;gap:25px;border-top:1px solid var(--line);margin-top:28px;padding-top:23px}.learning-item{display:flex;gap:12px}.learning-icon{width:31px;height:31px;display:grid;place-items:center;flex-shrink:0;border-radius:6px;background:#e9efea;color:#5b7a65}.learning-item:nth-child(2) .learning-icon{background:var(--orange-soft);color:var(--orange)}.learning-item:nth-child(3) .learning-icon{background:#eaf0f8;color:var(--blue)}.learning-item h3{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;margin:1px 0 5px}.learning-item p{font-size:10px;color:var(--muted);line-height:1.8}.footer{display:flex;justify-content:space-between;gap:10px;color:#95a099;font-size:10px;padding-top:23px;margin-top:23px;border-top:1px solid var(--line)}.footer span:first-child{display:flex;gap:6px;align-items:center}.footer svg{width:12px;height:12px}
+    .builder-panel{display:none}.builder-mode .preset-panel{display:none}.builder-mode .builder-panel{display:block}.builder-name{font-size:18px;font-weight:500;line-height:1.4;margin-bottom:8px}.builder-text{font-size:11px;color:var(--muted);line-height:1.8}.stepper{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:6px;background:white;padding:8px;margin-top:12px}.stepper button{width:31px;height:31px;display:grid;place-items:center;background:#f0f4f1;border-radius:4px}.stepper input{width:50px;background:none;border:0;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:23px;color:var(--ink);appearance:textfield;-moz-appearance:textfield}.stepper input::-webkit-inner-spin-button{appearance:none}.builder-field-label{display:block;font-size:11px;font-weight:600;margin-top:25px}.builder-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}.builder-presets button{border:1px solid var(--line);background:white;padding:6px 8px;border-radius:4px;font-size:10px}.builder-presets button:hover{border-color:var(--green);color:var(--green)}.outline-button{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border:1px solid #cddcd2;padding:9px;border-radius:5px;margin-top:13px;font-size:11px;color:var(--green)}.outline-button svg{width:14px;height:14px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:12px 20px;border-radius:6px;z-index:20;font-size:12px;max-width:90vw;text-align:center;box-shadow:0 5px 20px #0002}.toast[hidden]{display:none}dialog{border:1px solid var(--line);border-radius:8px;padding:28px;max-width:560px;width:calc(100% - 32px);color:var(--ink);box-shadow:0 30px 100px #122a2426}dialog::backdrop{background:#19302966;backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.dialog-head h2{font-size:22px}dialog h3{font-size:14px;margin:20px 0 7px}dialog p{font-size:13px;line-height:1.9;color:var(--muted)}.dialog-formula{font-family:'Space Grotesk',sans-serif;background:var(--green-soft);color:var(--green);padding:15px;margin:16px 0;font-size:16px;text-align:center;border-radius:5px}.reduced-motion-note{font-size:10px;margin-top:9px;color:var(--muted)}[hidden]{display:none!important}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline-color:var(--primary)}
+    .topbar{border-top:3px solid var(--primary)}
+    .avatar,.robot-option.active,.joint-label,.chain-chip,.outline-button{border-color:var(--primary-border)}
+    .robot-option:hover,.stepper button,.segmented,.motion-summary span,.small-badge{background:#efedf3}
+    .robot-mini,.range-ends,.chain-arrow,.footer{color:#817b8c}
+    .sidebar-note strong,.icon-btn,.legend,.usage-tags span,.motion-summary span{color:#60596b}
+    .viewer{background:#f0eef5;border-color:#dfd9eb}
+    .live-tag::before{background:var(--orange)}
+    .icon-btn{border-color:var(--line)}
+    .joint-label{box-shadow:0 2px 7px #30204712}
+    .joint-label.p,.chain-chip.p{border-color:#ffc4ad;color:var(--orange-ink)}
+    .joint-code.p,.segmented button.active.p{color:var(--orange-ink)}
+    .play-btn{background:var(--primary)}
+    .play-btn:hover{background:#391e8d}
+    .tip{background:var(--primary-soft);border-left-color:var(--primary)}
+    .tip p{color:#645a78}
+    .learning-icon{background:var(--primary-soft);color:var(--primary)}
+    .learning-item:nth-child(3) .learning-icon{background:#eeedf0;color:var(--ink)}
+    .axis-legend span:nth-child(1){color:var(--orange-ink)}
+    .axis-legend span:nth-child(2){color:var(--primary)}
+    .axis-legend span:nth-child(3){color:var(--ink)}
+    dialog{box-shadow:0 30px 100px #29203126}
+    dialog::backdrop{background:#29243066}
+    .joint-label{pointer-events:auto;cursor:pointer}.joint-label.selected{background:var(--primary);color:white;border-color:var(--primary)}.joint-label.p.selected{background:var(--orange);color:#fff;border-color:var(--orange)}
+    .local-joint-panel{position:absolute;z-index:6;right:12px;bottom:52px;width:270px;max-width:calc(100% - 24px);padding:14px;background:#fffffff5;border:1px solid var(--primary-border);border-radius:8px;box-shadow:0 6px 24px #29282e26;backdrop-filter:blur(8px)}
+    .local-joint-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}.local-joint-head strong{font-size:12px;flex:1;min-width:0;overflow-wrap:anywhere}.local-joint-head .icon-btn{width:28px;height:28px;flex-shrink:0}.local-joint-meta{font-size:10px;color:var(--muted);margin-bottom:12px}.local-joint-value{display:block;text-align:right;font-variant-numeric:tabular-nums;color:var(--primary);font-weight:600;font-size:14px;margin-bottom:6px}.local-joint-panel.p .local-joint-value{color:var(--orange-ink)}.local-joint-panel input[type=range]{height:24px;margin:0;touch-action:none}.local-joint-panel.p input[type=range]{accent-color:var(--orange)}
+    @media(min-width:1500px){.viewer{height:510px}.workspace{grid-template-columns:235px minmax(0,1fr) 290px;gap:28px}.robot-option{padding:13px 10px}}
+    @media(max-width:1150px){main{padding:25px 22px}.topbar{padding:0 22px}.workspace{grid-template-columns:185px minmax(0,1fr);gap:20px}.inspector{grid-column:2;display:grid;grid-template-columns:1fr 1fr;margin-top:0}.inspector-top{grid-row:span 2;border-right:1px solid var(--line);border-bottom:0}.inspector-section{padding:16px}.inspector-section:nth-last-child(2){border-bottom:0}.viewer{height:440px}.robot-option{padding:10px 6px;gap:7px}.robot-option .name{font-size:11px}.robot-option .count{font-size:11px}.robot-mini{width:25px}.info-band{gap:18px}}
+    @media(max-width:760px){.topbar{height:65px;padding:0 18px}.brand{font-size:20px}.brand-mark{width:31px;height:31px}.header-right{gap:13px}.course-label,.avatar,.help-btn span{display:none}main{padding:24px 16px 18px}.intro{align-items:flex-start;margin-bottom:24px}h1{font-size:25px}.intro p{max-width:300px;font-size:12px;line-height:1.7}.lesson-tag{display:none}.mode-tabs{gap:23px;margin-bottom:18px}.mode-tab{font-size:12px}.workspace{display:flex;flex-direction:column;gap:18px}.sidebar,.viewer-column,.inspector{width:100%}.section-label{margin-bottom:10px}.robot-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.robot-option{gap:6px;padding:8px 7px;min-height:57px;background:#ffffff80;border-color:var(--line);align-items:flex-start}.robot-mini{display:none}.robot-option .name{font-size:10px;line-height:1.35}.robot-option .type{font-size:9px}.robot-option .count{font-size:10px;margin-top:1px}.sidebar-note{display:none}.viewer{height:405px}.viewer-heading{top:16px;left:15px}.viewer-heading h2{font-size:17px}.viewer-actions{top:15px;right:12px;gap:4px}.icon-btn{width:29px;height:29px}.icon-btn svg{width:15px;height:15px}.viewer-actions .full-btn{display:none}.motion-bar{margin-bottom:17px}.motion-right{gap:5px}.check-label{font-size:9px}.play-btn{font-size:10px;padding:9px}.reset-btn{font-size:10px;padding:5px}.joint-controls{gap:8px}.joint-control{padding:10px}.joint-control-head{gap:5px;font-size:10px}.joint-value{font-size:10px}.inspector{display:grid;grid-template-columns:1fr 1fr}.inspector-top{padding:18px 15px}.stat-number{font-size:45px}.inspector-section{padding:15px}.info-band{grid-template-columns:1fr;gap:18px;margin-top:23px}.learning-item p{font-size:11px}.learning-item h3{font-size:12px}.footer{font-size:9px;line-height:1.7}.footer span:last-child{text-align:right}.builder-mode .sidebar{border-bottom:1px solid var(--line);padding-bottom:17px}.builder-panel{position:relative}.builder-name{font-size:16px}.builder-text{max-width:260px}.builder-field-label{margin-top:15px}.stepper{max-width:220px;margin-top:8px}.builder-presets{margin-top:9px}.builder-panel .outline-button{position:absolute;right:0;bottom:0;width:auto;font-size:10px}.builder-panel .sidebar-note{display:none}.builder-joint-config{gap:4px}.segmented button{font-size:9px;padding:5px 3px}.axis-select{width:39px}.joint-section-title span{font-size:9px}.builder-mode .joint-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:380px){.viewer{height:365px}.motion-right{flex-direction:column;align-items:flex-end}.robot-list{grid-template-columns:repeat(2,minmax(0,1fr))}.joint-controls,.builder-mode .joint-controls{grid-template-columns:1fr}.inspector{grid-template-columns:1fr}.inspector-top{border-right:0;border-bottom:1px solid var(--line);grid-row:auto}.inspector-section:nth-last-child(2){border-bottom:1px solid var(--line)}.builder-panel .outline-button{position:static;width:100%}.brand{font-size:18px}}
+    .intro .help-btn{flex-shrink:0;padding:9px 11px;border:1px solid var(--primary-border);border-radius:5px;color:var(--primary);background:var(--paper);white-space:nowrap}.intro .help-btn span{display:inline}
+    .builder-settings{display:none}.builder-mode .builder-settings{display:block}
+    @media(max-width:760px){.intro{flex-wrap:wrap;gap:12px}.intro>div{flex:1 1 260px;min-width:0}.intro .help-btn{margin-left:auto}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main id="app">
+    <section class="intro"><div><div class="eyebrow">Mozgásból megértés</div><h1>Szabadságfokok, térben.</h1><p>Fedezd fel a robotok mozgását, és építsd meg a sajátodat.</p></div><button class="help-btn" id="help-button" aria-label="Kisokos"><i data-lucide="circle-help"></i><span>Kisokos</span></button></section>
+    <div class="mode-tabs" role="tablist" aria-label="Munkamód"><button id="presets-tab" class="mode-tab active" role="tab" aria-selected="true" aria-controls="workspace"><i data-lucide="boxes"></i>Robottípusok<span class="small-badge">9</span></button><button id="builder-tab" class="mode-tab" role="tab" aria-selected="false" aria-controls="workspace" tabindex="-1"><i data-lucide="blocks"></i>Saját robot építése</button></div>
+    <div class="workspace" id="workspace" role="tabpanel" aria-labelledby="presets-tab">
+      <aside class="sidebar">
+        <div class="preset-panel"><div class="section-label">Válassz egy robotot</div><nav class="robot-list" id="robot-list" aria-label="Robottípusok"></nav><div class="sidebar-note"><i data-lucide="info"></i><p>A modellek <strong>szemléltető kinematikai vázlatok</strong>, nem gyártói gépmodellek.</p></div></div>
+        <div class="builder-panel"><div class="section-label">Robotműhely</div><h2 class="builder-name">A te robotod.<br>A te tengelyeid.</h2><p class="builder-text">Független, egytengelyű csuklókból álló soros kinematikai lánc.</p><label for="joint-count" class="builder-field-label">Csuklók száma</label><div class="stepper"><button id="remove-joint" aria-label="Egy csukló eltávolítása" title="Csukló eltávolítása"><i data-lucide="minus"></i></button><input id="joint-count" type="number" min="1" max="12" value="6" aria-label="Csuklók száma, 1 és 12 között"><button id="add-joint" aria-label="Egy csukló hozzáadása" title="Csukló hozzáadása"><i data-lucide="plus"></i></button></div><p class="reduced-motion-note">1–12 független csukló</p><label class="builder-field-label">Kiinduló összeállítás</label><div class="builder-presets"><button data-build="6R">6R</button><button data-build="3P">3P</button><button data-build="RPR">R–P–R</button><button data-build="12R">12R</button></div><button id="save-builder" class="outline-button"><i data-lucide="save"></i>Összeállítás mentése</button><div class="sidebar-note"><i data-lucide="info"></i><p>A 6-nál több csukló is növeli a konfigurációs szabadságfokot. A végpont térbeli pózának legfeljebb <strong>6 független összetevője</strong> van.</p></div></div>
+      </aside>
+      <section class="viewer-column" aria-label="3D robot és csuklóvezérlők">
+        <div class="viewer" id="viewer"><div class="viewer-heading"><div class="live-tag">3D NÉZET</div><h2 id="model-title">Artikulált robot</h2><p id="model-subtitle">Soros kinematika · 6 tengely</p></div><div class="viewer-actions"><button class="icon-btn" id="home-view" title="Alapnézet" aria-label="Kamera visszaállítása"><i data-lucide="scan"></i></button><button class="icon-btn" id="top-view" title="Felülnézet" aria-label="Felülnézet"><i data-lucide="view"></i></button><button class="icon-btn full-btn" id="fullscreen" title="Teljes képernyő" aria-label="Teljes képernyő"><i data-lucide="maximize"></i></button></div><div id="labels" aria-hidden="true"></div><div id="joint-tooltip" class="tooltip" hidden></div><div class="viewer-footer"><div class="legend"><span><b class="dot r"></b>Forgó (R)</span><span><b class="dot p"></b>Eltolódó (P)</span></div><div class="axis-legend" aria-label="Térbeli koordinátatengelyek"><span>X</span><span>Y</span><span>Z ↑</span></div></div><div class="status-overlay" id="loading"><strong>Robotlabor betöltése…</strong><span class="error-detail">A 3D-s megjelenítés előkészítése.</span></div></div>
+        <div class="motion-bar"><div class="motion-left"><button class="play-btn" id="play" disabled><i data-lucide="play"></i><span>Mozgás indítása</span></button><button class="reset-btn" id="reset" title="Csuklóértékek alaphelyzetbe"><i data-lucide="rotate-ccw"></i>Alaphelyzet</button></div><div class="motion-right"><label class="check-label"><input type="checkbox" id="show-labels" checked>Csuklójelölések</label><label class="check-label"><input type="checkbox" id="show-workspace">Munkatér</label></div></div>
+        <div class="builder-settings"><div class="joint-section-title"><h3>Csuklótípusok és helyi tengelyek</h3></div><div class="joint-controls" id="joint-controls"></div></div>
+      </section>
+      <aside class="inspector" aria-label="A robot adatai"><div class="inspector-top"><div class="inspector-kicker">SZABADSÁGFOK <i data-lucide="move-3d"></i></div><div class="stat-number" id="dof-stat" aria-live="polite">6 <span>DOF</span></div><p class="stat-caption" id="dof-caption">Függetlenül változtatható csuklókoordináta.</p><div class="joint-breakdown"><div class="breakdown-item"><strong><b class="dot r"></b><span id="r-count">6</span></strong>rotációs</div><div class="breakdown-item"><strong><b class="dot p"></b><span id="p-count">0</span></strong>transzlációs</div></div></div><div class="inspector-section"><h3 id="chain-title">Kinematikai lánc</h3><div class="chain" id="chain"></div></div><div class="inspector-section"><h3 id="about-title">Az artikulált robot</h3><p class="body-copy" id="about-copy"></p><div class="usage-tags" id="usage-tags"></div></div><div class="inspector-section"><h3 id="motion-title">Végpont mozgása</h3><div class="motion-summary" id="motion-summary"></div></div><div class="inspector-section"><div class="tip"><div class="tip-title"><i data-lucide="lightbulb"></i>Gondold végig!</div><p id="tip-copy"></p></div></div></aside>
+    </div>
+    <section class="info-band" aria-label="Alapfogalmak"><div class="learning-item"><span class="learning-icon"><i data-lucide="rotate-3d"></i></span><div><h3>Rotáció · R</h3><p>Elfordulás egy tengely körül. Szöggel mérjük, itt fokban (°).</p></div></div><div class="learning-item"><span class="learning-icon"><i data-lucide="move-horizontal"></i></span><div><h3>Transzláció · P</h3><p>Egyenes vonalú eltolódás. Úttal mérjük, itt milliméterben (mm).</p></div></div><div class="learning-item"><span class="learning-icon"><i data-lucide="scan-line"></i></span><div><h3>Szabadságfok · DOF</h3><p>A helyzet leírásához szükséges független koordináták száma.</p></div></div></section>
+    <footer class="footer"><span><i data-lucide="box"></i>Tanulj mozgás közben.</span><span>Idealizált modellek · Ütközésvizsgálat nélkül</span></footer>
+  </main>
+  <dialog id="help-dialog">
+    <div class="dialog-head"><h2>Egy kis robotkinematika</h2><button class="icon-btn" id="close-help" aria-label="Kisokos bezárása"><i data-lucide="x"></i></button></div>
+    <h3>Mit számolunk?</h3><p>A szabadságfok (DOF) a rendszer konfigurációját leíró független koordináták száma. Egy ideális forgó (R) vagy eltolódó (P) csukló egy-egy szabadságfokot ad egy nyitott soros lánchoz.</p>
+    <div class="dialog-formula">Soros robot: DOF = R csuklók + P csuklók</div>
+    <h3>Csuklómozgás és végpontmozgás</h3><p>Egy 6R kar végpontja általában 3 irányban eltolható és 3 tengely körül forgatható. A 7R kar konfigurációja 7 szabadságfokú, de a végpont póza továbbra is legfeljebb 6 független koordinátájú. Szinguláris helyzetben a pillanatnyi mozgásképesség csökkenhet.</p>
+    <h3>És a Delta?</h3><p>Zárt, párhuzamos láncoknál nem adhatjuk egyszerűen össze az összes csuklót. A bemutatott Delta 3 hajtott forgó csuklója a platform 3 eltolódását vezérli. A passzív csuklók és a párhuzamos rudak a kényszereket szemléltetik.</p>
+    <h3>A 3D-nézet kezelése</h3><p>Húzás: körbeforgatás. Görgő vagy kétujjas csippentés: nagyítás. Jobb egérgombos húzás: eltolás. A csukló fölé vitt egér vagy egy érintés megjeleníti az adatait. A csúszkák billentyűzettel is állíthatók.</p>
+    <h3>Mit jelent a munkatér?</h3>
+    <p>A pontfelhő a megfogó végpontjának elérhető helyzeteit mintavételezi 3500 csuklóállásból, a modell geometriája és a megadott mozgáshatárok alapján. Az orientációt nem ábrázolja. Az emelőasztalnál az asztallap középpontját követjük; a humanoid két kezének munkatere külön lila és narancsszínű.</p>
+    <p>A kartéziánus munkatér téglatest, a hengerkoordinátás hengerhéjszerű tartomány, a poláris gömbhéjszelet. A SCARA, a Delta és a robotkarok eltérő, a csuklóhatároktól is függő tartományt járnak be. Legfeljebb három csuklónál vonalak mutatják a csuklótartomány szélein bejárt végpontpályákat.</p>
+    <p>A mintavételezés közelítés, nem teljes elérhetőségi bizonyítás; a ritkábban mintázott részek is lehetnek elérhetők. A modellek méretei és csuklóhatárai oktatási célúak; nincs ütközés-, terhelés- vagy biztonságvizsgálat. A 3D-könyvtár és a betűtípusok betöltéséhez internetkapcsolat szükséges.</p>
+  </dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript><p>A Robotlabor használatához engedélyezd a JavaScriptet a böngészőben.</p></noscript>
+  <script>
+    window.addEventListener('error', event => {
+      if (event.message && !window.robotLabReady) {
+        const loading = document.getElementById('loading');
+        loading.replaceChildren();
+        const title = document.createElement('strong'); title.textContent = 'A 3D-nézet nem indult el.';
+        const detail = document.createElement('span'); detail.className = 'error-detail'; detail.textContent = 'Ellenőrizd az internetkapcsolatot és a WebGL támogatását, majd töltsd újra az oldalt.';
+        const retry = document.createElement('button'); retry.textContent = 'Újrapróbálás'; retry.onclick = () => location.reload();
+        loading.append(title, detail, retry); loading.hidden = false;
+      }
+    });
+    window.lucide?.createIcons();
+    document.getElementById('help-button').onclick = () => document.getElementById('help-dialog').showModal();
+    document.getElementById('close-help').onclick = () => document.getElementById('help-dialog').close();
+  </script>
+  <script type="module">
+    try {
+      const THREE = await import('three');
+      const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+      startLab(THREE, OrbitControls);
+    } catch (error) {
+      window.dispatchEvent(new ErrorEvent('error', { message: error.message }));
+      console.error(error);
+    }
+
+    function startLab(THREE, OrbitControls) {
+      const $ = id => document.getElementById(id);
+      const icons = () => window.lucide?.createIcons();
+      const deg = THREE.MathUtils.degToRad;
+      const axisVector = axis => new THREE.Vector3(...({ X: [1,0,0], Y: [0,1,0], Z: [0,0,1] }[axis]));
+      const joint = (type, axis, name, value = 0, min = -120, max = 120) => ({ type, axis, name, value, initial: value, min, max });
+      const rotary = (axis, name, value = 0, min = -120, max = 120) => joint('R', axis, name, value, min, max);
+      const linear = (axis, name, value = 100, max = 300) => joint('P', axis, name, value, 0, max);
+      const robots = [
+        { id:'lift', name:'Emelőasztal', subtitle:'Lineáris emelés', icon:'arrow-up-from-line', topology:'Soros', joints:[linear('Z','Emelés',120,350)], about:'Egyetlen függőleges eltolódás. Az asztallap magassága változik, az iránya nem. Az emelés módjától függetlenül egy koordináta írja le a mozgását.', tags:['Anyagmozgatás','Magasságállítás'], motion:['Z eltolódás'], tip:'Hány külön koordináta kell az asztallap helyzetének megadásához? A magasság önmagában elegendő.' },
+        { id:'cartesian', name:'Karteziánus', subtitle:'Derékszögű koordináták', icon:'move-3d', topology:'Soros', joints:[linear('X','X kocsi',100),linear('Y','Y kocsi',100),linear('Z','Z szán',120,250)], about:'Három, egymásra merőleges lineáris tengely mozgatja a végpontot. Az X, Y és Z koordináta közvetlenül változtatható; a szerszám orientációja rögzített.', tags:['3D nyomtatás','Portálrobot'], motion:['X eltolódás','Y eltolódás','Z eltolódás'], tip:'Ha csak az X csúszkát mozgatod, változik a végpont Y vagy Z koordinátája?' },
+        { id:'cylindrical', name:'Hengerkoordinátás', subtitle:'Forgás és két eltolódás', icon:'cylinder', topology:'Soros', joints:[rotary('Z','Oszlopforgás',25,-180,180),linear('Z','Magasság',140,300),linear('X','Sugár',130,320)], about:'Az alap körül forgó kar függőlegesen és sugárirányban is eltolható. A három független koordináta egy hengeres tartományban helyezi el a végpontot.', tags:['Gépkiszolgálás','Átrakás'], motion:['Helyzet: 3 DOF','Kötött orientáció'], tip:'A sugárirányú csukló forgás vagy eltolódás? Figyeld meg a kar hosszának változását.' },
+        { id:'polar', name:'Poláris', subtitle:'Gömbi koordináták', icon:'radar', topology:'Soros', joints:[rotary('Z','Alapforgás',25,-180,180),rotary('Y','Karemelés',-30,-70,50),linear('X','Kinyúlás',150,350)], about:'Két forgó és egy eltolódó csukló. Az alap elfordulása, a kar emelése és a kinyúlás egy gömbhéjszerű tartományban adja meg a végpont helyét.', tags:['Anyagkezelés','Öntészeti feladatok'], motion:['Helyzet: 3 DOF','Kötött orientáció'], tip:'Mi a különbség a kar emelése és a kar meghosszabbítása között? Hasonlítsd össze az R2 és P3 csuklót.' },
+        { id:'scara', name:'SCARA', subtitle:'Síkbeli kar, függőleges szán', icon:'git-branch', topology:'Soros', joints:[rotary('Z','Váll',25,-150,150),rotary('Z','Könyök',-65,-145,145),linear('Z','Függőleges szán',100,250),rotary('Z','Szerszámforgás',0,-180,180)], about:'A két párhuzamos forgástengely a vízszintes síkban mozgat. A függőleges szán és a szerszám forgatása további két, független mozgást ad.', tags:['Összeszerelés','Pick & place'], motion:['X / Y / Z helyzet','Z körüli forgás'], tip:'A négy csukló négy szabadságfokot ad. Miért nem tud mégis tetszőleges irányba billenni a szerszám?' },
+        { id:'articulated', name:'Artikulált', subtitle:'Articulated · ipari robotkar', icon:'workflow', topology:'Soros', joints:[rotary('Z','Alapforgás',25,-180,180),rotary('Y','Váll',-32,-100,100),rotary('Y','Könyök',70,-135,135),rotary('X','Csuklófordítás',0,-180,180),rotary('Y','Csuklóbillentés',42,-110,110),rotary('X','Szerszámforgás',0,-180,180)], about:'A klasszikus hattengelyes robotkar. A fő kar és a csukló együtt általános helyzetben a végpont térbeli helyzetét és orientációját is beállíthatja.', tags:['Hegesztés','Festés','Gépkiszolgálás'], motion:['Helyzet: 3 DOF','Orientáció: 3 DOF'], tip:'Hat forgó csuklóval egyenes vonalú végpontmozgás is létrehozható. Ehhez több csukló összehangolt mozgatása szükséges.' },
+        { id:'delta', name:'Delta', subtitle:'Párhuzamos kinematika', icon:'triangle', topology:'Párhuzamos', joints:[rotary('Y','1. hajtott kar',0,-25,45),rotary('Y','2. hajtott kar',0,-25,45),rotary('Y','3. hajtott kar',0,-25,45)], about:'Három motor a rögzített felső vázon, összekapcsolt párhuzamos karokkal. A platform térben eltolódik, miközben az orientációja rögzített marad. A passzív csuklókat nem adjuk hozzá a DOF-hoz.', tags:['Gyors válogatás','Csomagolás'], motion:['X / Y / Z eltolódás','Rögzített orientáció'], tip:'A hajtott csuklók forognak, a platform mégsem fordul el. A mozgást a zárt láncok kényszerei határozzák meg.' },
+        { id:'cobot', name:'Kobot', subtitle:'Cobot · együttműködő kar', icon:'handshake', topology:'Soros', joints:[rotary('Z','Alap',20,-180,180),rotary('Y','Váll',-35),rotary('X','Felkarcsavarás',0,-180,180),rotary('Y','Könyök',78,-135,135),rotary('X','Alkarcsavarás',0,-180,180),rotary('Y','Csuklóbillentés',35),rotary('X','Szerszám',0,-180,180)], about:'Egy 7R együttműködő kar példája. A hetedik tengely redundanciát adhat: ugyanahhoz a szerszámpózhoz több karhelyzet tartozhat. A „kobot” nem rögzített tengelyszámot jelent.', tags:['Közös munkatér','Rugalmas szerelés'], motion:['Póz: legfeljebb 6 DOF','1 redundáns tengely'], tip:'A kobot nem a szabadságfokok szerinti robotosztály. A biztonságos együttműködés kockázatértékelést is igényel, nem csupán megfelelő robotkart.' },
+        { id:'humanoid', name:'Humanoid', subtitle:'Emberszerű felsőtest', icon:'person-standing', topology:'Elágazó', joints:[rotary('Z','Törzs',0,-50,50),rotary('Z','Nyak',0,-70,70),rotary('Y','Bal váll: előre',-20,-100,100),rotary('X','Bal váll: oldalra',-18,-70,70),rotary('Z','Bal felkar: csavarás',0,-90,90),rotary('Y','Bal könyök',-35,-120,10),rotary('Z','Bal csukló',0,-90,90),rotary('Y','Jobb váll: előre',20,-100,100),rotary('X','Jobb váll: oldalra',18,-70,70),rotary('Z','Jobb felkar: csavarás',0,-90,90),rotary('Y','Jobb könyök',35,-10,120),rotary('Z','Jobb csukló',0,-90,90)], about:'Egy 12 szabadságfokú, egyszerűsített felsőtest: 1 törzs, 1 nyak és karonként 5 csukló. A valódi humanoidok tengelyszáma modellenként eltér; itt lábak nélküli példa látható.', tags:['Kétkaros feladatok','Emberszerű mozgás'], motion:['Törzs: 1 DOF','Nyak: 1 DOF','Karonként: 5 DOF'], tip:'A két kar külön ágat alkot. Ez nem egyetlen 12 csuklós kar, és nem jelenti azt, hogy egy kéznek 12 szabadságfoka van.' }
+      ];
+      let mode = 'presets', selected = 'articulated', playing = false, current, entries = [], modelRoot, envelope;
+      let workspaceTargets = [];
+      let selectedJoint = -1;
+      let frame = 0, animationTime = 0, previousTime = performance.now(), hovered = -1, toastTimer;
+      let builderJoints = robots.find(robot => robot.id === 'articulated').joints.map(item => ({...item}));
+      try {
+        const saved = JSON.parse(localStorage.getItem('robotlabor-builder'));
+        if (Array.isArray(saved) && saved.length >= 1 && saved.length <= 12 && saved.every(item => ['R','P'].includes(item.type) && ['X','Y','Z'].includes(item.axis) && Number.isFinite(item.value))) {
+          builderJoints = saved.map((item,index) => { const result = item.type === 'R' ? rotary(item.axis,`Csukló ${index+1}`) : linear(item.axis,`Csukló ${index+1}`,100,250); result.value = THREE.MathUtils.clamp(item.value,result.min,result.max); result.initial = result.value; return result; });
+        }
+      } catch {}
+      const viewer = $('viewer');
+      const localPanel=document.createElement('section');localPanel.id='local-joint-panel';localPanel.className='local-joint-panel';localPanel.hidden=true;
+      localPanel.setAttribute('aria-label','Kiválasztott csukló vezérlése');
+      localPanel.innerHTML='<div class="local-joint-head"><span id="local-joint-code" class="joint-code"></span><strong id="local-joint-title"></strong><button id="close-local-joint" class="icon-btn" aria-label="Csuklóvezérlő bezárása" title="Bezárás"><i data-lucide="x"></i></button></div><p id="local-joint-meta" class="local-joint-meta"></p><output id="local-joint-value" class="local-joint-value" for="local-joint-slider"></output><input id="local-joint-slider" type="range" step="1"><div class="range-ends"><span id="local-joint-min"></span><span id="local-joint-max"></span></div>';
+      viewer.append(localPanel);
+      const scene = new THREE.Scene(); scene.background = new THREE.Color('#f0eef5');
+      const camera = new THREE.PerspectiveCamera(37,1,.05,100);
+      const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.35;
+      viewer.prepend(renderer.domElement); renderer.domElement.setAttribute('aria-label','Interaktív 3D robotmodell'); renderer.domElement.setAttribute('role','img');
+      const controls = new OrbitControls(camera,renderer.domElement); controls.enableDamping = true; controls.dampingFactor = .07; controls.minDistance = 1.4; controls.maxDistance = 22; controls.maxPolarAngle = Math.PI*.49;
+      scene.add(new THREE.HemisphereLight(0xffffff,0xaaa4b5,3));
+      const sun = new THREE.DirectionalLight(0xffffff,4); sun.position.set(-3,8,5); sun.castShadow = true; sun.shadow.mapSize.set(2048,2048); sun.shadow.camera.left = -9; sun.shadow.camera.right = 9; sun.shadow.camera.top = 9; sun.shadow.camera.bottom = -9; sun.shadow.normalBias = .025; scene.add(sun);
+      const fill = new THREE.DirectionalLight(0xffffff,2); fill.position.set(5,4,-4);scene.add(fill);
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:'#f0eef5',roughness:.95}));floor.rotation.x = -Math.PI/2;floor.position.y = -.045;floor.receiveShadow = true;scene.add(floor);
+      const grid = new THREE.GridHelper(24,96,0xcfc7df,0xe1dce9);grid.position.y=-.035;grid.material.transparent=true;grid.material.opacity=.65;scene.add(grid);
+      const materials = {
+        body:new THREE.MeshStandardMaterial({color:'#eceaf0',metalness:.38,roughness:.32}),
+        dark:new THREE.MeshStandardMaterial({color:'#343239',metalness:.5,roughness:.34}),
+        green:new THREE.MeshStandardMaterial({color:'#4827AF',metalness:.32,roughness:.3}),
+        orange:new THREE.MeshStandardMaterial({color:'#FF4208',metalness:.25,roughness:.33}),
+        steel:new THREE.MeshStandardMaterial({color:'#c3c0cb',metalness:.75,roughness:.25}),
+        blue:new THREE.MeshStandardMaterial({color:'#727b8d',metalness:.3,roughness:.35}),
+        black:new THREE.MeshStandardMaterial({color:'#242329',metalness:.3,roughness:.5})
+      };
+      const geometryCache = new Map();
+      function geometry(key,create) { if(!geometryCache.has(key)) geometryCache.set(key,create()); return geometryCache.get(key); }
+      function box(parent,size,position,material=materials.body) { const mesh=new THREE.Mesh(geometry(`b${size.join(',')}`,()=>new THREE.BoxGeometry(...size)),material);mesh.position.set(...position);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh; }
+      function cylinder(parent,radius,length,position=[0,0,0],material=materials.green,axis='Z') { const mesh=new THREE.Mesh(geometry(`c${radius},${length}`,()=>new THREE.CylinderGeometry(radius,radius,length,32)),material);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),axisVector(axis));mesh.position.set(...position);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh; }
+      function rod(parent,start,end,radius=.055,material=materials.body) { const distance=start.distanceTo(end);const mesh=new THREE.Mesh(geometry(`r${radius}`,()=>new THREE.CylinderGeometry(radius,radius,1,16)),material);mesh.position.copy(start).add(end).multiplyScalar(.5);mesh.scale.y=distance;mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),end.clone().sub(start).normalize());mesh.castShadow=true;parent.add(mesh);return mesh; }
+      function moveRod(mesh,start,end) {mesh.position.copy(start).add(end).multiplyScalar(.5);mesh.scale.y=start.distanceTo(end);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),end.clone().sub(start).normalize());}
+      function base(parent,width=.95) {cylinder(parent,width*.56,.14,[0,0,.07],materials.dark);cylinder(parent,width*.37,.17,[0,0,.2],materials.body);for(const angle of [45,135,225,315]) cylinder(parent,.035,.025,[Math.cos(deg(angle))*width*.42,Math.sin(deg(angle))*width*.42,.15],materials.steel);}
+      function gripper(parent,position=[0,0,0],axis='X') {const group=new THREE.Group();group.position.set(...position);group.quaternion.setFromUnitVectors(new THREE.Vector3(1,0,0),axisVector(axis));parent.add(group);cylinder(group,.10,.13,[.04,0,0],materials.dark,'X');box(group,[.10,.32,.12],[.14,0,0],materials.dark);box(group,[.20,.055,.09],[.25,.135,0],materials.steel);box(group,[.20,.055,.09],[.25,-.135,0],materials.steel);const target=new THREE.Object3D();target.position.set(.35,0,0);group.add(target);workspaceTargets.push(target);return group;}
+      function addJoint(parent,index,position=[0,0,0]) {
+        const item=current.joints[index], mount=new THREE.Group();mount.position.set(...position);parent.add(mount);
+        const pivot=new THREE.Group();mount.add(pivot);
+        const color=item.type==='R'?materials.green:materials.orange;
+        const hub=cylinder(pivot,.14,.27,[0,0,0],color,item.axis);hub.userData.jointIndex=index;
+        cylinder(pivot,.092,.285,[0,0,0],materials.dark,item.axis);
+        const marker=cylinder(pivot,.034,.292,[0,0,0],materials.steel,item.axis);marker.userData.jointIndex=index;
+        const hit=new THREE.Mesh(geometry('hit',()=>new THREE.SphereGeometry(.205,12,12)),new THREE.MeshBasicMaterial({visible:false}));hit.userData.jointIndex=index;pivot.add(hit);
+        const label=document.createElement('button');label.type='button';label.className=`joint-label ${item.type==='P'?'p':''}`;label.textContent=`${item.type}${index+1}`;label.setAttribute('aria-label',`${item.name}: helyi csuklóvezérlő`);label.setAttribute('aria-pressed','false');label.onclick=()=>openLocalJoint(index);$('labels').append(label);
+        let prismaticRod=null;
+        if(item.type==='P') {
+          cylinder(mount,.10,.20,[0,0,0],materials.dark,item.axis);
+          prismaticRod=cylinder(mount,.055,1,[0,0,0],materials.steel,item.axis);
+        }
+        entries[index]={mount,pivot,hub,hit,label,index,item,prismaticRod};return pivot;
+      }
+      function link(parent,end,width=.18,material=materials.body) {rod(parent,new THREE.Vector3(),new THREE.Vector3(...end),width,material);}
+      function serialRobot(custom=false) {
+        base(modelRoot);let parent=modelRoot;let offset=[0,0,.43];
+        const dimensions=current.id==='cobot'?[.28,.81,.25,.78,.23,.30,.18]:[.28,.95,.85,.24,.30,.18];
+        current.joints.forEach((item,index)=>{
+          const pivot=addJoint(parent,index,offset);
+          let length=custom?.42:(dimensions[index]||.4);
+          let end;
+          if(index===0) end=[0,0,custom?.5:.46];
+          else if(custom) end=index%3===1?[0,0,.5]:[.43,0,.22];
+          else end=[length,0,0];
+          link(pivot,end,custom?.105:index<3?.135:.09,current.id==='cobot'?materials.body:materials.body);
+          parent=pivot;offset=end;
+        });gripper(parent,offset);
+      }
+      function cartesianRobot() {
+        box(modelRoot,[2.5,1.8,.16],[0,0,.08],materials.dark);
+        for(const x of [-1.1,1.1]) for(const y of [-.72,.72]) box(modelRoot,[.12,.12,2.3],[x,y,1.23],materials.body);
+        for(const y of [-.72,.72]) box(modelRoot,[2.5,.11,.14],[0,y,2.38],materials.steel);
+        let pivot=addJoint(modelRoot,0,[-.9,0,2.38]);box(pivot,[.19,1.65,.18],[0,0,0],materials.body);
+        pivot=addJoint(pivot,1,[0,-.5,-.12]);box(pivot,[.3,.33,.3],[0,0,0],materials.dark);
+        const zGuide=new THREE.Group();zGuide.name='cartesian-z-guide';pivot.add(zGuide);
+        box(zGuide,[.40,.16,1.55],[0,.15,-.70],materials.body);
+        for(const x of [-.13,.13])cylinder(zGuide,.035,1.40,[x,-.015,-.70],materials.steel);
+        pivot=addJoint(pivot,2,[0,0,-1.30]);
+        entries[2].prismaticRod.visible=false;
+        box(pivot,[.39,.24,.23],[0,-.03,0],materials.orange);
+        cylinder(pivot,.065,.24,[0,0,-.20],materials.steel);
+        const tool=gripper(pivot,[0,0,-.34],'Z');tool.name='cartesian-tool';
+        tool.quaternion.setFromUnitVectors(new THREE.Vector3(1,0,0),new THREE.Vector3(0,0,-1));
+      }
+      function liftRobot() {
+        box(modelRoot,[1.5,1.2,.16],[0,0,.08],materials.dark);
+        for(const x of [-.5,.5]) for(const y of [-.4,.4]) {cylinder(modelRoot,.075,.8,[x,y,.5],materials.dark);}
+        const pivot=addJoint(modelRoot,0,[0,0,.45]);box(pivot,[1.65,1.35,.13],[0,0,.18],materials.body);cylinder(pivot,.09,.8,[0,0,-.4],materials.steel);box(pivot,[1.2,.9,.035],[0,0,.265],materials.green);
+        const target=new THREE.Object3D();target.position.set(0,0,.2825);pivot.add(target);workspaceTargets.push(target);
+      }
+      function cylindricalRobot() {
+        base(modelRoot);const first=addJoint(modelRoot,0,[0,0,.4]);box(first,[.24,.3,1.55],[0,0,.65],materials.body);cylinder(first,.055,1.55,[.17,0,.65],materials.steel);
+        const second=addJoint(first,1,[0,0,.43]);box(second,[.43,.45,.32],[0,0,0],materials.dark);const third=addJoint(second,2,[.35,0,0]);box(third,[.85,.14,.14],[.19,0,0],materials.steel);gripper(third,[.65,0,0],'Z');
+      }
+      function polarRobot() {
+        base(modelRoot);box(modelRoot,[.42,.45,.7],[0,0,.53],materials.body);const first=addJoint(modelRoot,0,[0,0,.95]);const second=addJoint(first,1,[0,0,.15]);box(second,[.62,.26,.26],[.23,0,0],materials.body);const third=addJoint(second,2,[.48,0,0]);cylinder(third,.08,.8,[.18,0,0],materials.steel,'X');gripper(third,[.65,0,0]);
+      }
+      function scaraRobot() {
+        base(modelRoot);box(modelRoot,[.36,.4,1.55],[0,0,.9],materials.body);let pivot=addJoint(modelRoot,0,[0,0,1.7]);link(pivot,[.95,0,0],.13);pivot=addJoint(pivot,1,[.95,0,0]);link(pivot,[.83,0,0],.105);const end=addJoint(pivot,2,[.83,0,-.65]);cylinder(end,.055,.95,[0,0,.3],materials.steel);pivot=addJoint(end,3,[0,0,-.18]);gripper(pivot,[0,0,-.15],'Z');
+      }
+      function humanoidRobot() {
+        base(modelRoot,1.1);box(modelRoot,[.4,.35,.5],[0,0,.48],materials.dark);const torso=addJoint(modelRoot,0,[0,0,.8]);box(torso,[.8,.4,.88],[0,0,.5],materials.body);box(torso,[.45,.045,.38],[0,-.23,.6],materials.green);
+        const neck=addJoint(torso,1,[0,0,1.08]);box(neck,[.4,.36,.43],[0,0,.27],materials.body);box(neck,[.32,.035,.12],[0,-.19,.3],materials.dark);for(const x of [-.09,.09])box(neck,[.04,.02,.035],[x,-.214,.3],materials.green);
+        for(const [side,start] of [[-1,2],[1,7]]) {let pivot=addJoint(torso,start,[side*.56,0,.8]);pivot=addJoint(pivot,start+1,[side*.12,0,0]);pivot=addJoint(pivot,start+2,[0,0,-.16]);link(pivot,[0,0,-.53],.09);pivot=addJoint(pivot,start+3,[0,0,-.53]);link(pivot,[0,0,-.52],.075);pivot=addJoint(pivot,start+4,[0,0,-.52]);gripper(pivot,[0,0,-.15],'Z');}
+      }
+      let deltaState;
+      function deltaRobot() {
+        const height=2.65;
+        cylinder(modelRoot,.92,.13,[0,0,height],materials.dark);
+        deltaState={height,arms:[],platform:new THREE.Group()};modelRoot.add(deltaState.platform);
+        cylinder(deltaState.platform,.25,.10,[0,0,0],materials.body);gripper(deltaState.platform,[0,0,-.17],'Z');
+        for(let index=0;index<3;index++) {
+          const angle=index*Math.PI*2/3;const radial=new THREE.Vector3(Math.cos(angle),Math.sin(angle),0);
+          const anchor=radial.clone().multiplyScalar(.75);anchor.z=height-.12;
+          const pivot=addJoint(modelRoot,index,anchor.toArray());entries[index].mount.rotation.z=angle;const upper=rod(pivot,new THREE.Vector3(),new THREE.Vector3(.62,0,-.38),.085,materials.body);
+          const lower=[];for(const sign of [-1,1]) lower.push(rod(modelRoot,new THREE.Vector3(),new THREE.Vector3(0,0,1),.035,materials.steel));
+          deltaState.arms.push({anchor,radial,pivot,upper,lower});
+          const foot=radial.clone().multiplyScalar(1.48);box(modelRoot,[.13,.13,height+.13],[foot.x,foot.y,height/2],materials.body);rod(modelRoot,new THREE.Vector3(foot.x,foot.y,height),new THREE.Vector3(0,0,height),.075,materials.body);
+        }
+      }
+      function updateDelta() {
+        const radius=.75,platformRadius=.23,upperLength=.72,lowerLength=1.34;
+        const centers=deltaState.arms.map((arm,index)=>{
+          const theta=deg(current.joints[index].value+30);
+          const elbow=arm.anchor.clone().add(arm.radial.clone().multiplyScalar(upperLength*Math.cos(theta)));elbow.z-=upperLength*Math.sin(theta);
+          const center=elbow.clone().sub(arm.radial.clone().multiplyScalar(platformRadius));return {elbow,center};
+        });
+        const first=centers[0].center,second=centers[1].center,third=centers[2].center;
+        const ex=second.clone().sub(first).normalize(),distance=second.distanceTo(first),thirdDiff=third.clone().sub(first),projection=ex.dot(thirdDiff);
+        const ey=thirdDiff.clone().sub(ex.clone().multiplyScalar(projection)).normalize(),ez=new THREE.Vector3().crossVectors(ex,ey);const orthogonal=ey.dot(thirdDiff);
+        const x=distance/2,y=(projection*projection+orthogonal*orthogonal-2*projection*x)/(2*orthogonal),square=lowerLength*lowerLength-x*x-y*y;
+        const height=Math.sqrt(Math.max(0,square));const center=first.clone().addScaledVector(ex,x).addScaledVector(ey,y).addScaledVector(ez,ez.z>0?-height:height);
+        deltaState.platform.position.copy(center);
+        deltaState.arms.forEach((arm,index)=>{
+          const {elbow}=centers[index];const localEnd=elbow.clone().sub(arm.anchor).applyAxisAngle(new THREE.Vector3(0,0,1),-index*Math.PI*2/3).applyAxisAngle(new THREE.Vector3(0,1,0),-deg(current.joints[index].value));
+          moveRod(arm.upper,new THREE.Vector3(),localEnd);
+          const tangent=new THREE.Vector3(-arm.radial.y,arm.radial.x,0);
+          for(const [side,sign] of [[0,-1],[1,1]]) {const start=elbow.clone().addScaledVector(tangent,sign*.07);const end=center.clone().addScaledVector(arm.radial,platformRadius).addScaledVector(tangent,sign*.07);moveRod(arm.lower[side],start,end);}
+        });
+      }
+      function builderData() { const count=builderJoints.length;return {id:'builder',name:'Saját robot',subtitle:'Egyedi soros kinematika',topology:'Soros',joints:builderJoints,about:'Az általad összeállított, nyitott soros lánc. Minden csukló egy független koordinátát ad. A csuklótípus és a helyi tengely megválasztása a mozgás jellegét változtatja, nem a csuklónkénti szabadságfokot.',tags:['Saját konstrukció',`${count} csukló`],motion:[`Konfiguráció: ${count} DOF`,`Végpont: legfeljebb ${Math.min(count,6)} DOF`],tip:count>6?'A robot konfigurációjának több mint 6 szabadságfoka van. A végpont térbeli póza legfeljebb 6 független összetevőjű: a többi tengely redundanciát adhat.':'Próbáld ki ugyanazt a láncot eltérő csuklótípusokkal! A DOF nem változik, de a végpont mozgása igen. A tengelyeket a megelőző tag helyi koordinátarendszerében értelmezzük.'}; }
+      function renderList() {$('robot-list').innerHTML=robots.map(robot=>`<button class="robot-option ${robot.id===selected?'active':''}" data-robot="${robot.id}" aria-pressed="${robot.id===selected}"><span class="robot-mini"><i data-lucide="${robot.icon}"></i></span><span><span class="name">${robot.name}</span><span class="type">${robot.joints.map(item=>item.type).join('')} ${robot.id==='delta'?' · hajtott':''}</span></span><span class="count">${robot.joints.length}</span></button>`).join('');icons();}
+      function renderInfo() {
+        const count=current.joints.length, rCount=current.joints.filter(item=>item.type==='R').length;
+        $('model-title').textContent=current.id==='builder'?'Saját robot':`${current.name}${['articulated','delta','polar','cylindrical','cartesian'].includes(current.id)?' robot':''}`;
+        $('model-subtitle').textContent=`${current.topology} kinematika · ${count} ${current.id==='delta'?'hajtott tengely':'tengely'}`;
+        $('dof-stat').innerHTML=`${count} <span>DOF</span>`;$('r-count').textContent=rCount;$('p-count').textContent=count-rCount;
+        $('dof-caption').textContent=current.id==='delta'?'3 független hajtás; a passzív csuklók nem növelik a DOF-ot.':'Függetlenül változtatható csuklókoordináta.';
+        $('chain-title').textContent=current.id==='delta'?'Hajtott csuklók (3 ág)':current.id==='humanoid'?'Csuklók az elágazó láncban':'Kinematikai lánc';
+        $('chain').innerHTML=current.joints.map((item,index)=>`${index?'<span class="chain-arrow" aria-hidden="true">·</span>':''}<span class="chain-chip ${item.type==='P'?'p':''}" title="${item.name}: ${item.type==='R'?'rotációs':'transzlációs'}">${item.type}${index+1}</span>`).join('');
+        $('about-title').textContent=current.id==='builder'?'A saját konstrukciód':current.name;$('about-copy').textContent=current.about;$('tip-copy').textContent=current.tip;
+        $('usage-tags').innerHTML=current.tags.map(tag=>`<span>${tag}</span>`).join('');$('motion-summary').innerHTML=current.motion.map(text=>`<span>${text}</span>`).join('');
+        $('joint-count').value=builderJoints.length;$('remove-joint').disabled=builderJoints.length<=1;$('add-joint').disabled=builderJoints.length>=12;
+      }
+      function formatValue(item) {return `${Math.round(item.value)}${item.type==='R'?'°':' mm'}`;}
+      function renderJointControls() {
+        $('joint-controls').innerHTML=mode!=='builder'?'':current.joints.map((item,index)=>`<div class="joint-control" data-control="${index}"><div class="joint-control-head"><span class="joint-code ${item.type==='P'?'p':''}">${item.type}${index+1}</span><strong>Csukló ${index+1}</strong></div><div class="builder-joint-config"><div class="segmented" role="group" aria-label="${index+1}. csukló típusa"><button data-joint="${index}" data-type="R" class="${item.type==='R'?'active':''}" aria-pressed="${item.type==='R'}">R · Forgó</button><button data-joint="${index}" data-type="P" class="${item.type==='P'?'active p':''}" aria-pressed="${item.type==='P'}">P · Eltolódó</button></div><select class="axis-select" data-axis="${index}" aria-label="${index+1}. csukló helyi tengelye">${['X','Y','Z'].map(axis=>`<option ${axis===item.axis?'selected':''}>${axis}</option>`).join('')}</select></div></div>`).join('');
+      }
+      function buildWorkspace() {
+        const group=new THREE.Group();group.name='reachable-workspace';
+        const saved=current.joints.map(item=>item.value);
+        const primes=[2,3,5,7,11,13,17,19,23,29,31,37];
+        const positions=workspaceTargets.map(()=>[]),edgePositions=[];
+        const point=new THREE.Vector3();
+        function sample(fractions,output=positions) {
+          current.joints.forEach((item,index)=>item.value=item.min+fractions[index]*(item.max-item.min));
+          updatePose();
+          workspaceTargets.forEach((target,index)=>{
+            target.getWorldPosition(point);
+            if(point.toArray().every(Number.isFinite))output[index].push(point.x,point.y,point.z);
+          });
+        }
+        function fraction(sequence,base) {
+          let result=0,weight=1;
+          while(sequence>0){weight/=base;result+=(sequence%base)*weight;sequence=Math.floor(sequence/base);}
+          return result;
+        }
+        try {
+          for(let sequence=1;sequence<=3500;sequence++)sample(current.joints.map((item,index)=>fraction(sequence,primes[index])));
+          if(current.joints.length<=3) {
+            const count=current.joints.length;
+            for(let varying=0;varying<count;varying++) {
+              for(let corner=0;corner<2**(count-1);corner++) {
+                const fractions=new Array(count);let bit=0;
+                for(let index=0;index<count;index++)if(index!==varying)fractions[index]=(corner>>bit++)&1;
+                const outputs=workspaceTargets.map(()=>[]);
+                for(let step=0;step<=64;step++){fractions[varying]=step/64;sample(fractions,outputs);}
+                outputs.forEach(output=>{for(let index=3;index<output.length;index+=3)edgePositions.push(...output.slice(index-3,index+3));});
+              }
+            }
+          }
+        } finally {
+          current.joints.forEach((item,index)=>item.value=saved[index]);updatePose();
+        }
+        positions.forEach((values,index)=>{
+          const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(values,3));
+          const material=new THREE.PointsMaterial({color:index===0?0x4827af:0xff4208,size:.025,transparent:true,opacity:.28,depthWrite:false});
+          group.add(new THREE.Points(geometry,material));
+        });
+        if(edgePositions.length) {
+          const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(edgePositions,3));
+          group.add(new THREE.LineSegments(geometry,new THREE.LineBasicMaterial({color:0x4827af,transparent:true,opacity:.48,depthWrite:false})));
+        }
+        group.userData.sampleCount=3500;
+        group.visible=$('show-workspace').checked;scene.add(group);return group;
+      }
+      function rebuild({fit=true,controlsChanged=true}={}) {
+        stopAnimation();clearHover();closeLocalJoint();
+        if(modelRoot){scene.remove(modelRoot);modelRoot.traverse(child=>{if(child.userData.jointIndex!==undefined&&child.material?.type==='MeshBasicMaterial')child.material.dispose();});}
+        if(envelope){scene.remove(envelope);envelope.traverse(child=>{child.geometry?.dispose();child.material?.dispose();});}
+        $('labels').replaceChildren();entries=[];deltaState=null;workspaceTargets=[];
+        current=mode==='builder'?builderData():robots.find(robot=>robot.id===selected);
+        modelRoot=new THREE.Group();modelRoot.rotation.x=-Math.PI/2;scene.add(modelRoot);
+        const buildFunctions={lift:liftRobot,cartesian:cartesianRobot,cylindrical:cylindricalRobot,polar:polarRobot,scara:scaraRobot,delta:deltaRobot,humanoid:humanoidRobot};
+        if(mode==='builder')serialRobot(true);else if(buildFunctions[current.id])buildFunctions[current.id]();else serialRobot();
+        updatePose();
+        envelope=buildWorkspace();
+        renderInfo();if(controlsChanged)renderJointControls();if(fit)resetCamera();
+        $('play').disabled=false;icons();
+      }
+      function updatePose() {
+        for(const entry of entries){
+          if(!entry)continue;
+          const {item,pivot,prismaticRod}=entry;pivot.position.set(0,0,0);pivot.quaternion.identity();
+          if(item.type==='R')pivot.quaternion.setFromAxisAngle(axisVector(item.axis),deg(item.value));
+          else {
+            pivot.position.copy(axisVector(item.axis).multiplyScalar(item.value/250));
+            prismaticRod.position.copy(pivot.position).multiplyScalar(.5);
+            prismaticRod.scale.y=Math.max(.001,item.value/250);
+          }
+        }
+        if(deltaState)updateDelta();modelRoot.updateMatrixWorld(true);syncLocalJoint();
+      }
+      function resetCamera(top=false) {
+        const bounds=new THREE.Box3().setFromObject(modelRoot);
+        if(envelope?.visible)bounds.union(new THREE.Box3().setFromObject(envelope));
+        const size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+        const extent=Math.max(size.y,size.x,1.7),distance=Math.max(extent/(2*Math.tan(deg(camera.fov/2)))*1.5,4.6)/Math.min(1,camera.aspect);
+        controls.target.copy(center);controls.target.y=Math.max(center.y,.7);
+        const direction=top?new THREE.Vector3(.001,1,.001):new THREE.Vector3(1.15,.72,1.4).normalize();camera.position.copy(controls.target).addScaledVector(direction,Math.min(distance,19));controls.update();
+      }
+      function resize() {const width=viewer.clientWidth,height=viewer.clientHeight;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();}
+      new ResizeObserver(resize).observe(viewer);resize();
+      function stopAnimation() {playing=false;$('play').innerHTML='<i data-lucide="play"></i><span>Mozgás indítása</span>';icons();}
+      function toast(text) {clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,3500);}
+      function setMode(next) {
+        if(mode===next)return;mode=next;$('app').classList.toggle('builder-mode',next==='builder');
+        for(const [id,value] of [['presets-tab','presets'],['builder-tab','builder']]) {$(id).classList.toggle('active',value===mode);$(id).setAttribute('aria-selected',String(value===mode));$(id).tabIndex=value===mode?0:-1;}
+        $('workspace').setAttribute('aria-labelledby',next==='builder'?'builder-tab':'presets-tab');rebuild();
+      }
+      $('presets-tab').onclick=()=>setMode('presets');$('builder-tab').onclick=()=>setMode('builder');
+      document.querySelector('.mode-tabs').addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();setMode(event.key==='Home'?'presets':event.key==='End'?'builder':mode==='presets'?'builder':'presets');$(mode==='presets'?'presets-tab':'builder-tab').focus();}});
+      $('robot-list').onclick=event=>{const button=event.target.closest('[data-robot]');if(!button)return;selected=button.dataset.robot;renderList();rebuild();};
+      function setCount(value) {
+        const parsed=Number(value);if(!Number.isFinite(parsed)){ $('joint-count').value=builderJoints.length;return; }
+        const count=THREE.MathUtils.clamp(Math.round(parsed),1,12);
+        while(builderJoints.length<count){const index=builderJoints.length;builderJoints.push(rotary(index===0?'Z':index%2?'Y':'X',`Csukló ${index+1}`,index%2?-25:25));}
+        builderJoints.length=count;rebuild();
+      }
+      $('joint-count').onchange=event=>setCount(event.target.value);$('add-joint').onclick=()=>setCount(builderJoints.length+1);$('remove-joint').onclick=()=>setCount(builderJoints.length-1);
+      document.querySelector('.builder-presets').onclick=event=>{const button=event.target.closest('[data-build]');if(!button)return;const types=button.dataset.build==='6R'?'RRRRRR':button.dataset.build==='3P'?'PPP':button.dataset.build==='12R'?'R'.repeat(12):'RPR';builderJoints=[...types].map((type,index)=>type==='R'?rotary(index===0?'Z':index%2?'Y':'X',`Csukló ${index+1}`,index%2?-30:20):linear(['X','Y','Z'][index%3],`Csukló ${index+1}`,80,250));rebuild();};
+      $('save-builder').onclick=()=>{try {localStorage.setItem('robotlabor-builder',JSON.stringify(builderJoints));toast('Összeállítás mentve ebben a böngészőben.');}catch{toast('A böngésző nem engedélyezi a helyi mentést.');}};
+      function syncLocalJoint() {
+        if(selectedJoint<0)return;
+        const item=current.joints[selectedJoint];
+        $('local-joint-slider').value=item.value;
+        $('local-joint-slider').setAttribute('aria-valuetext',formatValue(item));
+        $('local-joint-value').textContent=formatValue(item);
+      }
+      function closeLocalJoint() {
+        selectedJoint=-1;localPanel.hidden=true;
+        entries.forEach(entry=>{entry.label.classList.remove('selected');entry.label.setAttribute('aria-pressed','false');});
+      }
+      function openLocalJoint(index) {
+        stopAnimation();clearHover();selectedJoint=index;
+        const item=current.joints[index],unit=item.type==='R'?'°':' mm';
+        localPanel.classList.toggle('p',item.type==='P');
+        $('local-joint-code').textContent=`${item.type}${index+1}`;$('local-joint-code').classList.toggle('p',item.type==='P');
+        $('local-joint-title').textContent=item.name;
+        $('local-joint-meta').textContent=`${item.type==='R'?'Rotációs':'Transzlációs'} · helyi ${item.axis} tengely · 1 DOF`;
+        const slider=$('local-joint-slider');slider.min=item.min;slider.max=item.max;
+        slider.setAttribute('aria-label',`${index+1}. csukló helyi vezérlése, ${item.type==='R'?'fok':'milliméter'}`);
+        $('local-joint-min').textContent=item.min+unit;$('local-joint-max').textContent=item.max+unit;
+        entries.forEach(entry=>{entry.label.classList.toggle('selected',entry.index===index);entry.label.setAttribute('aria-pressed',String(entry.index===index));});
+        localPanel.hidden=false;syncLocalJoint();slider.focus({preventScroll:true});
+      }
+      $('close-local-joint').onclick=()=>{const label=entries[selectedJoint]?.label;closeLocalJoint();label?.focus({preventScroll:true});};
+      localPanel.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();$('close-local-joint').click();}});
+      $('local-joint-slider').addEventListener('input',event=>{
+        if(selectedJoint<0)return;stopAnimation();
+        const item=current.joints[selectedJoint];item.value=Number(event.target.value);
+        updatePose();
+      });
+      $('joint-controls').addEventListener('click',event=>{
+        const button=event.target.closest('[data-type]');if(!button)return;const index=Number(button.dataset.joint),old=builderJoints[index];if(old.type===button.dataset.type)return;builderJoints[index]=button.dataset.type==='R'?rotary(old.axis,`Csukló ${index+1}`):linear(old.axis,`Csukló ${index+1}`,80,250);rebuild({fit:false});document.querySelector(`[data-joint="${index}"][data-type="${button.dataset.type}"]`)?.focus();
+      });
+      $('joint-controls').addEventListener('change',event=>{if(!event.target.matches('[data-axis]'))return;const index=Number(event.target.dataset.axis);builderJoints[index].axis=event.target.value;rebuild({fit:false});document.querySelector(`[data-axis="${index}"]`)?.focus();});
+      $('play').onclick=()=>{playing=!playing;if(playing){animationTime=0;current.joints.forEach(item=>item.animationStart=item.value);$('play').innerHTML='<i data-lucide="pause"></i><span>Mozgás szüneteltetése</span>';icons();}else stopAnimation();};
+      $('reset').onclick=()=>{stopAnimation();current.joints.forEach(item=>item.value=item.initial);updatePose();renderJointControls();};
+      $('home-view').onclick=()=>resetCamera();$('top-view').onclick=()=>resetCamera(true);
+      $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await viewer.requestFullscreen();}catch{toast('A teljes képernyő ebben a böngészőben nem érhető el.');}};
+      $('show-workspace').onchange=event=>{if(envelope){envelope.visible=event.target.checked;resetCamera();}};$('show-labels').onchange=event=>{$('labels').hidden=!event.target.checked;};
+      const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),projected=new THREE.Vector3();
+      function clearHover() {hovered=-1;$('joint-tooltip').hidden=true;renderer.domElement.style.cursor='grab';document.querySelectorAll('.joint-control.highlight').forEach(node=>node.classList.remove('highlight'));}
+      function showJoint(index,x,y) {
+        if(!localPanel.hidden){clearHover();return;}
+        if(index<0){clearHover();return;}hovered=index;const item=current.joints[index];
+        document.querySelectorAll('.joint-control.highlight').forEach(node=>node.classList.remove('highlight'));document.querySelector(`[data-control="${index}"]`)?.classList.add('highlight');
+        $('joint-tooltip').innerHTML=`<strong>${item.type}${index+1} · ${item.name}</strong><div class="tt-row"><span>Típus</span><b>${item.type==='R'?'Rotációs (forgó)':'Transzlációs (eltolódó)'}</b></div><div class="tt-row"><span>Helyi tengely</span><b>${item.axis}</b></div><div class="tt-row"><span>Aktuális érték</span><b id="hover-value">${formatValue(item)}</b></div><div class="tt-row"><span>Tartomány</span><b>${item.min}…${item.max}${item.type==='R'?'°':' mm'}</b></div><div class="tt-row"><span>Független koordináta</span><b>1 DOF</b></div>`;
+        $('joint-tooltip').hidden=false;const width=$('joint-tooltip').offsetWidth,height=$('joint-tooltip').offsetHeight;$('joint-tooltip').style.left=`${Math.max(8,Math.min(x+16,viewer.clientWidth-width-8))}px`;$('joint-tooltip').style.top=`${Math.max(8,Math.min(y+16,viewer.clientHeight-height-8))}px`;renderer.domElement.style.cursor='pointer';
+      }
+      function pick(event,select=false) {const rect=renderer.domElement.getBoundingClientRect();const x=event.clientX-rect.left,y=event.clientY-rect.top;pointer.set(x/rect.width*2-1,-y/rect.height*2+1);raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(entries.flatMap(entry=>entry?[entry.hub,entry.hit]:[]),false);const index=hits.length?hits[0].object.userData.jointIndex:-1;if(select){if(index>=0)openLocalJoint(index);else closeLocalJoint();}else showJoint(index,x,y);}
+      let pointerStart=null;
+      renderer.domElement.addEventListener('pointerdown',event=>{pointerStart={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};});
+      renderer.domElement.addEventListener('pointermove',event=>{if(pointerStart&&Math.hypot(event.clientX-pointerStart.x,event.clientY-pointerStart.y)>6)pointerStart.moved=true;if(event.buttons){clearHover();return;}pick(event);});
+      renderer.domElement.addEventListener('pointerup',event=>{if(pointerStart&&pointerStart.id===event.pointerId&&!pointerStart.moved&&event.button===0)pick(event,true);pointerStart=null;});
+      renderer.domElement.addEventListener('pointercancel',()=>{pointerStart=null;});renderer.domElement.addEventListener('pointerleave',clearHover);controls.addEventListener('start',clearHover);
+      document.addEventListener('visibilitychange',()=>{if(document.hidden)stopAnimation();});
+      function render(time) {
+        frame=requestAnimationFrame(render);const delta=Math.min((time-previousTime)/1000,.05);previousTime=time;
+        if(playing){animationTime+=delta;current.joints.forEach((item,index)=>{const amplitude=(item.max-item.min)*.16;item.value=THREE.MathUtils.clamp(item.animationStart+Math.sin(animationTime*.65+index*.55)*Math.sin(Math.min(animationTime,1)*Math.PI/2)*amplitude,item.min,item.max);});updatePose();if(hovered>=0&&$('hover-value'))$('hover-value').textContent=formatValue(current.joints[hovered]);}
+        controls.update();camera.updateMatrixWorld();
+        entries.forEach(entry=>{if(!entry)return;entry.pivot.getWorldPosition(projected);projected.project(camera);const x=(projected.x*.5+.5)*viewer.clientWidth,y=(-projected.y*.5+.5)*viewer.clientHeight;entry.label.style.left=`${x+15}px`;entry.label.style.top=`${y-15}px`;entry.label.hidden=projected.z>1||projected.z< -1||x<0||x>viewer.clientWidth||y<65||y>viewer.clientHeight-40;});
+        renderer.render(scene,camera);
+      }
+      renderList();rebuild();$('loading').hidden=true;window.robotLabReady=true;requestAnimationFrame(render);
+      window.robotLab={get current(){return current;},get entries(){return entries;},get model(){return modelRoot;},get camera(){return camera;},get renderer(){return renderer;},get playing(){return playing;},get delta(){return deltaState;}};
+      window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);renderer.dispose();},{once:true});
+    }
+  </script>
+</body>
+</html>
