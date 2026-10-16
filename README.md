@@ -1,0 +1,2 @@
+# robotepito
+Robotépítés, szabadságfok szimulátor
